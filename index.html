@@ -189,10 +189,12 @@
             </div>
           </div>
         </div>
-        <form class="contacto-form">
-          <input type="text" placeholder="Tu nombre" required />
-          <input type="tel" placeholder="Tu teléfono o WhatsApp" required />
-          <select>
+        <form class="contacto-form" id="contacto-form">
+          <input type="hidden" name="_subject" value="Nuevo mensaje desde la página web — JJRamírez Seguros" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="text" name="nombre" placeholder="Tu nombre" required />
+          <input type="tel" name="telefono" placeholder="Tu teléfono o WhatsApp" required />
+          <select name="seguro">
             <option value="">¿Qué seguro te interesa?</option>
             <option>Seguro de Vida</option>
             <option>Seguro de Hogar</option>
@@ -201,8 +203,10 @@
             <option>Seguro de Viaje</option>
             <option>No sé, necesito asesoría</option>
           </select>
-          <textarea placeholder="Cuéntame un poco más (opcional)" rows="4"></textarea>
-          <button type="submit" class="btn-primary">Enviar mensaje</button>
+          <textarea name="mensaje" placeholder="Cuéntame un poco más (opcional)" rows="4"></textarea>
+          <button type="submit" class="btn-primary" id="btn-enviar">Enviar mensaje</button>
+          <p id="form-success" style="display:none; color:#2ecc71; font-weight:600; text-align:center; margin-top:0.5rem;">✓ Mensaje enviado. ¡Pronto me pondré en contacto contigo!</p>
+          <p id="form-error" style="display:none; color:#e74c3c; font-weight:600; text-align:center; margin-top:0.5rem;">Hubo un error al enviar. Por favor intenta de nuevo.</p>
         </form>
       </div>
     </div>
@@ -219,5 +223,38 @@
     </div>
   </footer>
 
+  <script>
+    document.getElementById('contacto-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-enviar');
+      const successMsg = document.getElementById('form-success');
+      const errorMsg = document.getElementById('form-error');
+
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/zapatajulian42@gmail.com', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(this)
+        });
+
+        if (response.ok) {
+          successMsg.style.display = 'block';
+          this.reset();
+        } else {
+          errorMsg.style.display = 'block';
+        }
+      } catch {
+        errorMsg.style.display = 'block';
+      } finally {
+        btn.textContent = 'Enviar mensaje';
+        btn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
