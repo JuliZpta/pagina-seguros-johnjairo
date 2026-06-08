@@ -202,6 +202,45 @@ body {
   flex-shrink: 0;
 }
 
+/* ===== BIENVENIDA ===== */
+.bienvenida {
+  padding: 80px 0;
+  background: var(--gray-100);
+}
+
+.bienvenida-inner {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.bienvenida-img {
+  width: 280px;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.bienvenida-texto h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.bienvenida-texto h2 span {
+  color: var(--primary);
+}
+
+.bienvenida-texto p {
+  font-size: 1.1rem;
+  color: var(--gray-500);
+  line-height: 1.7;
+}
+
 /* ===== SECTION COMMON ===== */
 .section-header {
   text-align: center;
@@ -523,6 +562,8 @@ body {
   .sobre-grid { grid-template-columns: 1fr; }
   .cards-grid { grid-template-columns: repeat(2, 1fr); }
   .contacto-inner { grid-template-columns: 1fr; }
+  .bienvenida-inner { flex-direction: column; text-align: center; }
+  .bienvenida-img { width: 220px; }
 }
 
 @media (max-width: 600px) {
@@ -533,4 +574,5 @@ body {
   .cards-grid { grid-template-columns: 1fr; }
   .sobre-stats { grid-template-columns: 1fr 1fr; }
   .section-header h2 { font-size: 1.8rem; }
+  .bienvenida-img { width: 180px; }
 }
