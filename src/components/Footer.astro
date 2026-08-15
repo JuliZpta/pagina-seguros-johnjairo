@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import { ordenarSeguros } from '../lib/seguros';
+import { contacto } from '../lib/config';
+
+const seguros = ordenarSeguros(await getCollection('seguros'));
+const anio = new Date().getFullYear();
+---
+<footer class="pie">
+  <div class="contenedor rejilla">
+    <div>
+      <div class="marca">JR<span>.</span></div>
+      <p>Asesor profesional de seguros — {contacto.ubicacion}</p>
+      <p class="horario">{contacto.horario}</p>
+    </div>
+    <div>
+      <h3>Seguros</h3>
+      <ul>{seguros.map((s) => <li><a href={`/seguros/${s.id}`}>{s.data.titulo}</a></li>)}</ul>
+    </div>
+    <div>
+      <h3>Enlaces</h3>
+      <ul>
+        <li><a href="/novedades">Novedades</a></li>
+        <li><a href="/conocenos">Conócenos</a></li>
+        <li><a href="/preguntas-frecuentes">Preguntas frecuentes</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="contenedor copia">© {anio} JR Seguros. Todos los derechos reservados.</div>
+</footer>
+
+<style>
+  .pie { background: var(--fondo-profundo); border-top: 1px solid var(--borde); padding-top: 48px; margin-top: 64px; }
+  .rejilla { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; padding-bottom: 32px; }
+  .marca { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; }
+  .marca span { color: var(--acento); }
+  .pie p { color: var(--texto-sec); font-size: 0.9rem; }
+  .horario { margin-top: 6px; font-size: 0.85rem; }
+  .pie h3 { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--acento); margin-bottom: 12px; }
+  .pie ul { list-style: none; display: grid; gap: 8px; }
+  .pie li a { color: var(--texto-sec); font-size: 0.9rem; }
+  .pie li a:hover { color: var(--texto); }
+  .copia { border-top: 1px solid var(--borde); padding-block: 20px; color: var(--texto-sec); font-size: 0.82rem; }
+  @media (max-width: 760px) { .rejilla { grid-template-columns: 1fr; } }
+</style>

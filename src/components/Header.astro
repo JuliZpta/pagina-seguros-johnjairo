@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import { ordenarSeguros } from '../lib/seguros';
+
+const seguros = ordenarSeguros(await getCollection('seguros'));
+const ruta = Astro.url.pathname;
+---
+<header class="cabecera">
+  <div class="contenedor barra">
+    <a href="/" class="marca">JR<span>.</span></a>
+
+    <button class="hamburguesa" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="menu" class="menu">
+      <div class="grupo">
+        <button class="disparador" aria-expanded="false" aria-controls="panel-seguros">
+          Seguros <span aria-hidden="true">▾</span>
+        </button>
+        <div id="panel-seguros" class="panel" hidden>
+          <div class="panel-rejilla">
+            {seguros.map((s) => (
+              <a href={`/seguros/${s.id}`} class="panel-item">
+                <span class="panel-icono" aria-hidden="true">{s.data.icono}</span>
+                <span>
+                  <strong>{s.data.titulo}</strong>
+                  <small>{s.data.resumen}</small>
+                </span>
+              </a>
+            ))}
+          </div>
+          <a href="/seguros" class="panel-pie">Ver todos los seguros →</a>
+        </div>
+      </div>
+
+      <a href="/novedades" aria-current={ruta.startsWith('/novedades') ? 'page' : undefined}>Novedades</a>
+      <a href="/conocenos" aria-current={ruta === '/conocenos' ? 'page' : undefined}>Conócenos</a>
+      <a href="/preguntas-frecuentes" aria-current={ruta === '/preguntas-frecuentes' ? 'page' : undefined}>Preguntas frecuentes</a>
+      <a href="/contacto" class="boton-principal">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .cabecera { background: var(--fondo); border-bottom: 1px solid var(--borde); position: sticky; top: 0; z-index: 50; }
+  .barra { display: flex; align-items: center; justify-content: space-between; padding-block: 14px; }
+  .marca { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+  .marca span { color: var(--acento); }
+  .menu { display: flex; align-items: center; gap: 24px; font-size: 0.95rem; }
+  .menu > a { color: var(--texto-sec); }
+  .menu > a:hover, .menu > a[aria-current='page'] { color: var(--texto); }
+  .menu > a.boton-principal { color: var(--fondo-profundo); }
+  .grupo { position: relative; }
+  .disparador { background: none; border: none; color: var(--texto-sec); font: inherit; cursor: pointer; padding: 0; }
+  .disparador[aria-expanded='true'] { color: var(--acento); }
+  .panel {
+    position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%);
+    width: min(560px, 90vw); background: #132A22; border: 1px solid var(--borde);
+    border-radius: 12px; padding: 10px; box-shadow: 0 22px 45px rgba(0,0,0,.55);
+  }
+  .panel[hidden] { display: none; }
+  .panel-rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .panel-item { display: flex; gap: 10px; padding: 11px; border-radius: var(--radio); }
+  .panel-item:hover { background: #1C3B30; }
+  .panel-icono { font-size: 1.15rem; }
+  .panel-item strong { display: block; font-size: 0.92rem; }
+  .panel-item small { display: block; color: var(--texto-sec); font-size: 0.78rem; margin-top: 2px; }
+  .panel-pie { display: block; border-top: 1px solid var(--borde); margin-top: 8px; padding: 12px; color: var(--acento); font-size: 0.88rem; font-weight: 600; }
+  .hamburguesa { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+  .hamburguesa span { width: 22px; height: 2px; background: var(--texto); }
+
+  @media (max-width: 860px) {
+    .hamburguesa { display: flex; }
+    .menu {
+      display: none; position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: var(--fondo); border-bottom: 1px solid var(--borde); padding: 12px 24px 20px;
+    }
+    .menu.abierto { display: flex; }
+    .menu > a, .disparador { padding: 14px 0; border-bottom: 1px solid var(--borde); text-align: left; width: 100%; }
+    .menu > a.boton-principal { text-align: center; margin-top: 14px; border: none; }
+    .panel { position: static; transform: none; width: 100%; box-shadow: none; background: transparent; border: none; padding: 0 0 0 8px; }
+    .panel-rejilla { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const hamburguesa = document.querySelector<HTMLButtonElement>('.hamburguesa');
+  const menu = document.querySelector<HTMLElement>('#menu');
+  const disparador = document.querySelector<HTMLButtonElement>('.disparador');
+  const panel = document.querySelector<HTMLElement>('#panel-seguros');
+
+  hamburguesa?.addEventListener('click', () => {
+    const abierto = menu?.classList.toggle('abierto') ?? false;
+    hamburguesa.setAttribute('aria-expanded', String(abierto));
+  });
+
+  function alternarPanel(mostrar: boolean) {
+    if (!panel || !disparador) return;
+    panel.hidden = !mostrar;
+    disparador.setAttribute('aria-expanded', String(mostrar));
+  }
+
+  disparador?.addEventListener('click', () => alternarPanel(panel?.hidden ?? true));
+
+  document.addEventListener('click', (e) => {
+    if (!panel || panel.hidden) return;
+    const dentro = panel.contains(e.target as Node) || disparador?.contains(e.target as Node);
+    if (!dentro) alternarPanel(false);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') alternarPanel(false);
+  });
+</script>

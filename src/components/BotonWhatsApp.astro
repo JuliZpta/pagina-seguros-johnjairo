@@ -1,0 +1,12 @@
+---
+import { contacto } from '../lib/config';
+import { enlaceWhatsApp } from '../lib/whatsapp';
+
+interface Props { mensaje: string; texto?: string; variante?: 'principal' | 'secundario'; }
+const { mensaje, texto = 'Escríbeme por WhatsApp', variante = 'principal' } = Astro.props;
+const url = enlaceWhatsApp(contacto.whatsapp, mensaje);
+---
+<a href={url} target="_blank" rel="noopener noreferrer"
+   class={variante === 'principal' ? 'boton-principal' : 'boton-secundario'}>
+  {texto}
+</a>
