@@ -23,7 +23,9 @@ const fotos = [
   { src: moto, clase: '' },
 ];
 
-const [antes, despues] = inicio.heroTitulo.split(inicio.heroResaltado);
+const corte = inicio.heroTitulo.indexOf(inicio.heroResaltado);
+const antes = inicio.heroTitulo.slice(0, corte);
+const despues = inicio.heroTitulo.slice(corte + inicio.heroResaltado.length);
 ---
 <section class="hero">
   <div class="collage" aria-hidden="true">
