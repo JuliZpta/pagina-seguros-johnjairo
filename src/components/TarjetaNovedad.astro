@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { resolverImagen } from '../lib/imagenes';
+
+interface Props { novedad: CollectionEntry<'novedades'>; }
+const { novedad } = Astro.props;
+const imagen = resolverImagen(novedad.data.imagen);
+const fecha = novedad.data.fecha.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+---
+<a href={`/novedades/${novedad.id}`} class="tarjeta">
+  {imagen && <Image src={imagen} alt="" widths={[400, 800]} format="webp" quality={75} class="portada" />}
+  <div class="cuerpo">
+    <time datetime={novedad.data.fecha.toISOString()}>{fecha}</time>
+    <h3>{novedad.data.titulo}</h3>
+    <p>{novedad.data.resumen}</p>
+  </div>
+</a>
+
+<style>
+  .tarjeta {
+    display: block; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta);
+    overflow: hidden; background: var(--fondo); transition: border-color .18s;
+  }
+  .tarjeta:hover { border-color: var(--acento); }
+  .portada { width: 100%; height: 160px; object-fit: cover; display: block; }
+  .cuerpo { padding: 18px; }
+  time { color: var(--acento); font-size: 0.75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  h3 { font-size: 1.02rem; margin: 8px 0; }
+  p { color: var(--texto-sec); font-size: 0.9rem; }
+</style>

@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { seguro: CollectionEntry<'seguros'>; }
+const { seguro } = Astro.props;
+---
+<a href={`/seguros/${seguro.id}`} class="tarjeta">
+  <span class="icono" aria-hidden="true">{seguro.data.icono}</span>
+  <h3>{seguro.data.titulo}</h3>
+  <p>{seguro.data.resumen}</p>
+  <span class="enlace">Conocer más →</span>
+</a>
+
+<style>
+  .tarjeta {
+    display: block; background: var(--fondo); border: 1px solid var(--borde);
+    border-radius: var(--radio-tarjeta); padding: 24px; transition: border-color .18s, transform .18s;
+  }
+  .tarjeta:hover { border-color: var(--acento); transform: translateY(-2px); }
+  .icono { font-size: 1.7rem; display: block; margin-bottom: 14px; }
+  h3 { font-size: 1.12rem; margin-bottom: 8px; }
+  p { color: var(--texto-sec); font-size: 0.92rem; margin-bottom: 16px; }
+  .enlace { color: var(--acento); font-size: 0.88rem; font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .tarjeta:hover { transform: none; } }
+</style>

@@ -1,7 +1,71 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import HeroCollage from '../components/HeroCollage.astro';
+import TarjetaSeguro from '../components/TarjetaSeguro.astro';
+import TarjetaNovedad from '../components/TarjetaNovedad.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import { soloDestacados } from '../lib/seguros';
+import { ultimasNovedades } from '../lib/novedades';
+import { inicio } from '../lib/config';
+
+const todos = await getCollection('seguros');
+const destacados = soloDestacados(todos);
+const novedades = ultimasNovedades(await getCollection('novedades'), 3);
 ---
 <Base titulo="JR Seguros" descripcion="Asesor profesional de seguros en Colombia. Asesoría gratuita en seguros de vida, hogar, vehículo, empresarial y viaje.">
   <HeroCollage />
+
+  <section class="contenedor bloque">
+    <p class="etiqueta">Mis productos</p>
+    <h2>Seguros que ofrezco</h2>
+    <div class="rejilla-seguros">
+      {destacados.map((s) => <TarjetaSeguro seguro={s} />)}
+    </div>
+    <p class="centro">
+      <a href="/seguros" class="boton-secundario">Ver los {todos.length} seguros →</a>
+    </p>
+  </section>
+
+  <section class="contenedor bloque">
+    <p class="etiqueta">Quién te asesora</p>
+    <h2>Sobre John Jairo</h2>
+    <p class="sobre">{inicio.sobreMi}</p>
+    <div class="rejilla-stats">
+      {inicio.estadisticas.map((e) => (
+        <div class="stat"><strong>{e.numero}</strong><span>{e.etiqueta}</span></div>
+      ))}
+    </div>
+    <p class="centro"><a href="/conocenos" class="boton-secundario">Conócelo mejor →</a></p>
+  </section>
+
+  {novedades.length > 0 && (
+    <section class="contenedor bloque">
+      <p class="etiqueta">Al día</p>
+      <h2>Novedades</h2>
+      <div class="rejilla-novedades">
+        {novedades.map((n) => <TarjetaNovedad novedad={n} />)}
+      </div>
+    </section>
+  )}
+
+  <section class="contenedor bloque centro">
+    <h2>¿No sabes cuál seguro necesitas?</h2>
+    <p class="sobre">Cuéntame tu situación y juntos encontramos la mejor opción. La asesoría no te cuesta nada.</p>
+    <BotonWhatsApp mensaje="Hola John Jairo, no sé qué seguro necesito. ¿Me puedes asesorar?" />
+  </section>
 </Base>
+
+<style>
+  .bloque { padding-block: 64px; }
+  h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin-block: 8px 26px; }
+  .rejilla-seguros, .rejilla-novedades { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .rejilla-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .stat { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); padding: 22px; text-align: center; }
+  .stat strong { display: block; font-size: 1.9rem; font-weight: 800; color: var(--acento); letter-spacing: -0.03em; }
+  .stat span { color: var(--texto-sec); font-size: 0.85rem; }
+  .sobre { color: var(--texto-sec); max-width: 44rem; }
+  .centro { text-align: center; margin-top: 26px; }
+  .centro .sobre { margin-inline: auto; margin-bottom: 22px; }
+  @media (max-width: 900px) { .rejilla-seguros, .rejilla-novedades { grid-template-columns: 1fr; } .rejilla-stats { grid-template-columns: repeat(2, 1fr); } }
+</style>
