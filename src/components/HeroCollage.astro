@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import { inicio } from '../lib/config';
+import BotonWhatsApp from './BotonWhatsApp.astro';
+
+import familia from '../assets/img/collage/familia.jpg';
+import casa from '../assets/img/collage/casa.jpg';
+import carro from '../assets/img/collage/carro.jpg';
+import viaje from '../assets/img/collage/viaje.jpg';
+import negocio from '../assets/img/collage/negocio.jpg';
+import abuelos from '../assets/img/collage/abuelos.jpg';
+import ninos from '../assets/img/collage/ninos.jpg';
+import moto from '../assets/img/collage/moto.jpg';
+
+const fotos = [
+  { src: familia, clase: 'grande' },
+  { src: casa, clase: '' },
+  { src: carro, clase: '' },
+  { src: viaje, clase: '' },
+  { src: negocio, clase: '' },
+  { src: abuelos, clase: '' },
+  { src: ninos, clase: 'ancha' },
+  { src: moto, clase: '' },
+];
+
+const [antes, despues] = inicio.heroTitulo.split(inicio.heroResaltado);
+---
+<section class="hero">
+  <div class="collage" aria-hidden="true">
+    {fotos.map((f) => (
+      <Image src={f.src} alt="" widths={[300, 600]} format="webp" quality={70} class={f.clase} loading="eager" />
+    ))}
+  </div>
+  <div class="velo" aria-hidden="true"></div>
+
+  <div class="contenedor texto">
+    <p class="insignia">{inicio.heroInsignia}</p>
+    <h1>{antes}<span>{inicio.heroResaltado}</span>{despues}</h1>
+    <p class="sub">{inicio.heroSubtitulo}</p>
+    <div class="acciones">
+      <BotonWhatsApp mensaje="Hola John Jairo, quiero asesoría sobre seguros." />
+      <a href="/seguros" class="boton-secundario">Ver seguros</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; overflow: hidden; }
+  .collage {
+    position: absolute; inset: 0;
+    display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 3px;
+  }
+  .collage :global(img) { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
+  .collage :global(.grande) { grid-column: span 2; grid-row: span 2; }
+  .collage :global(.ancha) { grid-column: span 2; }
+  .velo {
+    position: absolute; inset: 0;
+    background: linear-gradient(100deg, #08130Ff7 0%, #0E1F1Aef 42%, #0E1F1Ac0 72%, #0E1F1A99 100%);
+  }
+  .texto { position: relative; padding-block: 96px; }
+  .insignia {
+    display: inline-block; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--acento); border: 1px solid var(--borde); padding: 6px 14px; border-radius: 99px; margin-bottom: 22px;
+  }
+  h1 { font-size: clamp(2.4rem, 6vw, 4rem); margin-bottom: 18px; }
+  h1 span { color: var(--acento); }
+  .sub { color: var(--texto-sec); font-size: 1.05rem; max-width: 32rem; margin-bottom: 30px; }
+  .acciones { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  @media (max-width: 760px) {
+    .collage { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); }
+    .velo { background: linear-gradient(180deg, #08130Fee 0%, #0E1F1Af5 60%, #0E1F1A 100%); }
+    .texto { padding-block: 64px; }
+  }
+</style>
