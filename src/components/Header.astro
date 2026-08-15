@@ -57,7 +57,7 @@ const ruta = Astro.url.pathname;
   .panel {
     position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%);
     width: min(560px, 90vw); background: var(--superficie); border: 1px solid var(--borde);
-    border-radius: 0 0 var(--radio-tarjeta) var(--radio-tarjeta); padding: 10px; box-shadow: 0 22px 45px rgba(0,0,0,.55);
+    border-radius: var(--radio-tarjeta); padding: 10px; box-shadow: 0 22px 45px rgba(0,0,0,.55);
   }
   .panel[hidden] { display: none; }
   .panel-rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
