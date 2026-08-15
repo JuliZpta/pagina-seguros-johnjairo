@@ -1,0 +1,21 @@
+{
+  "name": "jr-seguros",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "enlaces": "linkinator dist --recurse --silent"
+  },
+  "dependencies": {
+    "astro": "^7.2.2"
+  },
+  "devDependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "linkinator": "^8.0.3",
+    "vitest": "^4.1.10"
+  }
+}
