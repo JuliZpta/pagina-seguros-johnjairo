@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import FormularioContacto from '../components/FormularioContacto.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import { contacto } from '../lib/config';
+---
+<Base titulo="Contacto" descripcion="Escríbele a John Jairo por WhatsApp o déjale un mensaje. Asesoría gratuita en seguros.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Hablemos</p>
+    <h1>¿Listo para proteger lo tuyo?</h1>
+    <p class="intro">Sin compromisos y sin costo. La forma más rápida es WhatsApp.</p>
+
+    <div class="doble">
+      <div class="datos">
+        <div class="destacado">
+          <h2>La vía más rápida</h2>
+          <p>Te respondo personalmente, normalmente el mismo día.</p>
+          <BotonWhatsApp mensaje="Hola John Jairo, quiero asesoría sobre seguros." />
+        </div>
+
+        <dl>
+          <div><dt>Correo</dt><dd><a href={`mailto:${contacto.correo}`}>{contacto.correo}</a></dd></div>
+          <div><dt>Ubicación</dt><dd>{contacto.ubicacion}</dd></div>
+          <div><dt>Horario</dt><dd>{contacto.horario}</dd></div>
+        </dl>
+      </div>
+
+      <div class="caja">
+        <h2>O déjame un mensaje</h2>
+        <FormularioContacto />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 56px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-block: 8px 14px; }
+  .intro { color: var(--texto-sec); margin-bottom: 38px; }
+  .doble { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; align-items: start; }
+  .destacado { border: 1px solid var(--acento); border-radius: var(--radio-caja); padding: 28px; background: rgba(74,222,155,.06); margin-bottom: 20px; }
+  .destacado h2 { font-size: 1.25rem; margin-bottom: 8px; }
+  .destacado p { color: var(--texto-sec); font-size: 0.93rem; margin-bottom: 20px; }
+  dl { display: grid; gap: 16px; border: 1px solid var(--borde); border-radius: var(--radio-caja); padding: 24px; }
+  dt { font-size: 0.72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--acento); margin-bottom: 4px; }
+  dd { color: var(--texto-sec); font-size: 0.95rem; }
+  dd a:hover { color: var(--acento); }
+  .caja { border: 1px solid var(--borde); border-radius: var(--radio-caja); padding: 28px; background: var(--fondo-profundo); }
+  .caja h2 { font-size: 1.25rem; margin-bottom: 20px; }
+  @media (max-width: 900px) { .doble { grid-template-columns: 1fr; } }
+</style>

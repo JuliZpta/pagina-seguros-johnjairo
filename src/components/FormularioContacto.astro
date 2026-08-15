@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import { contacto } from '../lib/config';
+import { ordenarSeguros } from '../lib/seguros';
+import { enlaceWhatsApp } from '../lib/whatsapp';
+
+const seguros = ordenarSeguros(await getCollection('seguros'));
+const destino = `https://formsubmit.co/ajax/${contacto.correo}`;
+const urlRespaldo = enlaceWhatsApp(contacto.whatsapp, 'Hola John Jairo, intenté escribirte por la página pero el formulario falló.');
+---
+<form id="formulario" class="formulario" data-destino={destino}>
+  <input type="hidden" name="_subject" value="Nuevo mensaje desde la página web — JR Seguros" />
+  <input type="hidden" name="_cc" value="zapatajulian42@gmail.com" />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <label>Tu nombre
+    <input type="text" name="nombre" required autocomplete="name" />
+  </label>
+
+  <label>Tu teléfono o WhatsApp
+    <input type="tel" name="telefono" required autocomplete="tel" />
+  </label>
+
+  <label>¿Qué seguro te interesa?
+    <select name="seguro">
+      <option value="">Selecciona una opción</option>
+      {seguros.map((s) => <option value={s.data.titulo}>{s.data.titulo}</option>)}
+      <option value="No sé, necesito asesoría">No sé, necesito asesoría</option>
+    </select>
+  </label>
+
+  <label>Cuéntame un poco más (opcional)
+    <textarea name="mensaje" rows="4"></textarea>
+  </label>
+
+  <button type="submit" class="boton-principal">Enviar mensaje</button>
+
+  <p id="exito" class="aviso exito" hidden role="status">
+    ✓ Mensaje enviado. John Jairo se pondrá en contacto contigo pronto.
+  </p>
+  <div id="error" class="aviso error" hidden role="alert">
+    <p>No se pudo enviar el mensaje. Escríbele directo por WhatsApp:</p>
+    <a href={urlRespaldo} target="_blank" rel="noopener noreferrer" class="boton-principal">Abrir WhatsApp</a>
+  </div>
+</form>
+
+<style>
+  .formulario { display: grid; gap: 16px; }
+  label { display: grid; gap: 6px; font-size: 0.88rem; color: var(--texto-sec); }
+  input, select, textarea {
+    background: var(--fondo-profundo); border: 1px solid var(--borde); border-radius: var(--radio);
+    padding: 13px 14px; color: var(--texto); font: inherit; font-size: 0.95rem; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: var(--acento); }
+  textarea { resize: vertical; }
+  button[disabled] { opacity: .6; cursor: progress; }
+  .aviso { border-radius: var(--radio); padding: 14px; font-size: 0.92rem; }
+  .exito { background: rgba(74,222,155,.12); color: var(--acento); font-weight: 600; text-align: center; }
+  .error { background: rgba(255,120,90,.1); border: 1px solid rgba(255,120,90,.35); text-align: center; display: grid; gap: 12px; }
+  .error p { color: #FFB4A2; }
+</style>
+
+<script>
+  const formulario = document.querySelector<HTMLFormElement>('#formulario');
+  const exito = document.querySelector<HTMLElement>('#exito');
+  const error = document.querySelector<HTMLElement>('#error');
+  const boton = formulario?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  formulario?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!boton || !exito || !error) return;
+
+    const textoOriginal = boton.textContent;
+    boton.disabled = true;
+    boton.textContent = 'Enviando...';
+    exito.hidden = true;
+    error.hidden = true;
+
+    try {
+      const respuesta = await fetch(formulario.dataset.destino!, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(formulario),
+      });
+      if (!respuesta.ok) throw new Error(String(respuesta.status));
+      exito.hidden = false;
+      formulario.reset();
+    } catch {
+      error.hidden = false;
+    } finally {
+      boton.disabled = false;
+      boton.textContent = textoOriginal;
+    }
+  });
+</script>
