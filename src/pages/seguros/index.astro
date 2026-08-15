@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TarjetaSeguro from '../../components/TarjetaSeguro.astro';
+import BotonWhatsApp from '../../components/BotonWhatsApp.astro';
+import { ordenarSeguros } from '../../lib/seguros';
+
+const seguros = ordenarSeguros(await getCollection('seguros'));
+---
+<Base titulo="Seguros" descripcion="Todos los seguros que ofrece JR Seguros: vida, hogar, vehículo, empresarial y viaje. Asesoría gratuita en Colombia.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Mis productos</p>
+    <h1>Todos los seguros</h1>
+    <p class="intro">Cada seguro protege algo distinto. Entra al que te interese y te explico qué cubre, con qué condiciones y para quién sirve.</p>
+    <div class="rejilla">
+      {seguros.map((s) => <TarjetaSeguro seguro={s} />)}
+    </div>
+    <div class="cierre">
+      <h2>¿No sabes cuál necesitas?</h2>
+      <p>Cuéntame tu situación y te digo con honestidad qué te conviene.</p>
+      <BotonWhatsApp mensaje="Hola John Jairo, no sé qué seguro necesito. ¿Me puedes asesorar?" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 56px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-block: 8px 14px; }
+  .intro { color: var(--texto-sec); max-width: 42rem; margin-bottom: 34px; }
+  .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cierre { text-align: center; margin-top: 56px; padding: 40px 24px; border: 1px solid var(--borde); border-radius: var(--radio-caja); background: var(--fondo-profundo); }
+  .cierre h2 { font-size: 1.6rem; margin-bottom: 10px; }
+  .cierre p { color: var(--texto-sec); margin-bottom: 22px; }
+  @media (max-width: 900px) { .rejilla { grid-template-columns: 1fr; } }
+</style>

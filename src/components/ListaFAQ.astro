@@ -1,0 +1,24 @@
+---
+interface Props { preguntas: { pregunta: string; respuesta: string }[]; }
+const { preguntas } = Astro.props;
+---
+{preguntas.length > 0 && (
+  <div class="faq">
+    {preguntas.map((p) => (
+      <details>
+        <summary>{p.pregunta}</summary>
+        <p>{p.respuesta}</p>
+      </details>
+    ))}
+  </div>
+)}
+
+<style>
+  .faq { display: grid; gap: 8px; }
+  details { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--fondo); }
+  summary { padding: 18px; cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::after { content: '+'; color: var(--acento); font-size: 1.2rem; line-height: 1; }
+  details[open] summary::after { content: '−'; }
+  summary::-webkit-details-marker { display: none; }
+  details p { padding: 0 18px 18px; color: var(--texto-sec); }
+</style>
