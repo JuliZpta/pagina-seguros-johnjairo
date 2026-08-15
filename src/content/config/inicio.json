@@ -1,0 +1,13 @@
+{
+  "heroTitulo": "Protege lo que más importa",
+  "heroResaltado": "importa",
+  "heroSubtitulo": "Comparo las aseguradoras del país y te digo cuál te sirve de verdad. La asesoría no te cuesta nada.",
+  "heroInsignia": "10 años · +200 familias protegidas",
+  "sobreMi": "Soy asesor de seguros comprometido con el bienestar de mis clientes. Mi misión es ofrecerte soluciones claras, honestas y adaptadas a tu situación real, sin tecnicismos ni complicaciones.",
+  "estadisticas": [
+    { "numero": "+200", "etiqueta": "Clientes satisfechos" },
+    { "numero": "10+", "etiqueta": "Años de experiencia" },
+    { "numero": "5", "etiqueta": "Tipos de seguros" },
+    { "numero": "100%", "etiqueta": "Compromiso contigo" }
+  ]
+}
