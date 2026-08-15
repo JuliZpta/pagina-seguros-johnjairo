@@ -25,7 +25,7 @@ content:
           - { name: respuesta, label: Respuesta, type: text, required: true }
       - { name: destacado, label: Mostrar en el inicio, type: boolean, default: true }
       - { name: orden, label: Posición, type: number, required: true, description: "1 aparece primero." }
-      - { name: body, label: Descripción completa, type: rich-text }
+      - { name: body, label: Descripción completa, type: rich-text, required: true }
 
   - name: novedades
     label: Novedades
@@ -59,7 +59,7 @@ content:
     path: src/content/config/contacto.json
     fields:
       - { name: whatsapp, label: WhatsApp, type: string, required: true, pattern: "^[0-9]{10,15}$", description: "Solo números, con indicativo y sin +. Ejemplo: 573001112233" }
-      - { name: correo, label: Correo, type: string, required: true }
+      - { name: correo, label: Correo, type: string, required: true, pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" }
       - { name: ubicacion, label: Ubicación, type: string, required: true }
       - { name: horario, label: Horario de atención, type: string, required: true }
 
