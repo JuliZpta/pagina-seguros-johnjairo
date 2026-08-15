@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+---
+<Base titulo="Página no encontrada" descripcion="La página que buscas no existe o fue movida.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Error 404</p>
+    <h1>No encontramos esta página</h1>
+    <p class="intro">El enlace que seguiste puede estar roto o la página fue movida. Vuelve al inicio, revisa nuestros seguros o escríbeme directamente por WhatsApp.</p>
+
+    <div class="acciones">
+      <a href="/" class="boton-principal">Ir al inicio</a>
+      <a href="/seguros" class="boton-secundario">Ver seguros</a>
+    </div>
+
+    <div class="cierre">
+      <p>¿Prefieres que te ayude directamente?</p>
+      <BotonWhatsApp mensaje="Hola John Jairo, llegué a un enlace que no funciona y necesito ayuda." />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 80px; max-width: 42rem; text-align: center; }
+  .etiqueta { color: var(--acento); font-size: 0.78rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 14px; }
+  .intro { color: var(--texto-sec); margin-bottom: 34px; }
+  .acciones { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 44px; }
+  .cierre { padding-top: 32px; border-top: 1px solid var(--borde); }
+  .cierre p { color: var(--texto-sec); margin-bottom: 16px; }
+</style>
