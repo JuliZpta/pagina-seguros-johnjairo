@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+
+const entradas = (await getCollection('faq')).sort((a, b) => a.data.orden - b.data.orden);
+const preguntas = await Promise.all(
+  entradas.map(async (e) => ({ pregunta: e.data.pregunta, Contenido: (await render(e)).Content }))
+);
+---
+<Base titulo="Preguntas frecuentes" descripcion="Respuestas a las dudas más comunes sobre seguros y asesoría en Colombia.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Dudas comunes</p>
+    <h1>Preguntas frecuentes</h1>
+    <p class="intro">Si tu pregunta no está aquí, escríbeme y te respondo.</p>
+
+    <div class="faq">
+      {preguntas.map(({ pregunta, Contenido }) => (
+        <details>
+          <summary>{pregunta}</summary>
+          <div class="respuesta"><Contenido /></div>
+        </details>
+      ))}
+    </div>
+
+    <div class="cierre">
+      <p>¿Tu pregunta no está aquí?</p>
+      <BotonWhatsApp mensaje="Hola John Jairo, tengo una pregunta sobre seguros." />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 56px; max-width: 48rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-block: 8px 14px; }
+  .intro { color: var(--texto-sec); margin-bottom: 34px; }
+  .faq { display: grid; gap: 8px; }
+  details { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--fondo); }
+  summary { padding: 18px; cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::after { content: '+'; color: var(--acento); font-size: 1.2rem; line-height: 1; }
+  details[open] summary::after { content: '−'; }
+  summary::-webkit-details-marker { display: none; }
+  .respuesta { padding: 0 18px 18px; color: var(--texto-sec); }
+  .respuesta :global(p) { margin-bottom: 10px; }
+  .cierre { margin-top: 44px; text-align: center; }
+  .cierre p { color: var(--texto-sec); margin-bottom: 16px; }
+</style>

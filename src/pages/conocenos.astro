@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import { inicio, contacto } from '../lib/config';
+
+const valores = [
+  { titulo: 'Asesoría sin costo', texto: 'Consultarme no te cuesta nada. Cobro comisión de la aseguradora, no de ti.' },
+  { titulo: 'Comparación honesta', texto: 'Trabajo con varias aseguradoras, así que puedo decirte cuál conviene de verdad.' },
+  { titulo: 'Acompañamiento en el siniestro', texto: 'Cuando pasa algo, no te dejo solo con el trámite. Ahí es donde se nota tener asesor.' },
+  { titulo: 'Respuesta rápida', texto: 'Un mensaje de WhatsApp basta. No tienes que pasar por un conmutador.' },
+];
+---
+<Base titulo="Conócenos" descripcion="John Jairo, asesor independiente de seguros en Colombia con más de 10 años de experiencia.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Quién te asesora</p>
+    <h1>Conócenos</h1>
+    <p class="intro">{inicio.sobreMi}</p>
+
+    <div class="rejilla-stats">
+      {inicio.estadisticas.map((e) => (
+        <div class="stat"><strong>{e.numero}</strong><span>{e.etiqueta}</span></div>
+      ))}
+    </div>
+
+    <h2>Cómo trabajo</h2>
+    <div class="rejilla-valores">
+      {valores.map((v) => (
+        <div class="valor"><h3>{v.titulo}</h3><p>{v.texto}</p></div>
+      ))}
+    </div>
+
+    <div class="cierre">
+      <h2>¿Hablamos?</h2>
+      <p>{contacto.horario}</p>
+      <BotonWhatsApp mensaje="Hola John Jairo, quiero conocer más sobre tu asesoría." />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 56px; max-width: 62rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-block: 8px 16px; }
+  .intro { color: var(--texto-sec); font-size: 1.05rem; max-width: 44rem; margin-bottom: 36px; }
+  h2 { font-size: 1.6rem; margin-block: 48px 20px; }
+  .rejilla-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); padding: 22px; text-align: center; }
+  .stat strong { display: block; font-size: 1.9rem; font-weight: 800; color: var(--acento); letter-spacing: -0.03em; }
+  .stat span { color: var(--texto-sec); font-size: 0.85rem; }
+  .rejilla-valores { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .valor { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); padding: 24px; }
+  .valor h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .valor p { color: var(--texto-sec); font-size: 0.93rem; }
+  .cierre { margin-top: 56px; padding: 40px 24px; border: 1px solid var(--borde); border-radius: var(--radio-caja); background: var(--fondo-profundo); text-align: center; }
+  .cierre h2 { margin-top: 0; }
+  .cierre p { color: var(--texto-sec); margin-bottom: 22px; }
+  @media (max-width: 860px) { .rejilla-stats { grid-template-columns: repeat(2, 1fr); } .rejilla-valores { grid-template-columns: 1fr; } }
+</style>
