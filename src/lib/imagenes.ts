@@ -1,9 +1,6 @@
-const BASE = '/src/assets/img';
-
 export function normalizarRuta(ruta: string): string {
   let r = decodeURIComponent(ruta.trim());
   if (!r.startsWith('/')) r = `/${r}`;
-  if (r.startsWith('/img/')) r = `${BASE}${r.slice('/img'.length)}`;
   return r;
 }
 

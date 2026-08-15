@@ -10,10 +10,6 @@ describe('normalizarRuta', () => {
     expect(normalizarRuta('src/assets/img/foto.jpg')).toBe('/src/assets/img/foto.jpg');
   });
 
-  it('reescribe rutas heredadas que apuntaban a public', () => {
-    expect(normalizarRuta('/img/hero/hero-image.png')).toBe('/src/assets/img/hero/hero-image.png');
-  });
-
   it('decodifica espacios codificados en el nombre del archivo', () => {
     expect(normalizarRuta('/src/assets/img/mi%20foto.jpg')).toBe('/src/assets/img/mi foto.jpg');
   });
