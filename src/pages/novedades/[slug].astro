@@ -1,0 +1,48 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import BotonWhatsApp from '../../components/BotonWhatsApp.astro';
+import { novedadesPublicadas } from '../../lib/novedades';
+import { resolverImagen } from '../../lib/imagenes';
+
+export async function getStaticPaths() {
+  const publicadas = novedadesPublicadas(await getCollection('novedades'));
+  return publicadas.map((novedad) => ({ params: { slug: novedad.id }, props: { novedad } }));
+}
+
+interface Props { novedad: CollectionEntry<'novedades'>; }
+const { novedad } = Astro.props;
+const { Content } = await render(novedad);
+const portada = resolverImagen(novedad.data.imagen);
+const fecha = novedad.data.fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base titulo={novedad.data.titulo} descripcion={novedad.data.resumen}>
+  <article class="contenedor bloque">
+    <nav class="miga" aria-label="Ruta de navegación">
+      <a href="/">Inicio</a> <span aria-hidden="true">/</span> <a href="/novedades">Novedades</a>
+    </nav>
+    <time datetime={novedad.data.fecha.toISOString()}>{fecha}</time>
+    <h1>{novedad.data.titulo}</h1>
+    {portada && <Image src={portada} alt={novedad.data.titulo} widths={[600, 1200]} format="webp" quality={78} class="portada" />}
+    <div class="prosa"><Content /></div>
+    <div class="cierre">
+      <p>¿Tienes dudas sobre esto?</p>
+      <BotonWhatsApp mensaje={`Hola John Jairo, vi la novedad "${novedad.data.titulo}" y quiero saber más.`} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .bloque { padding-block: 40px 64px; max-width: 46rem; }
+  .miga { font-size: 0.85rem; color: var(--texto-sec); margin-bottom: 24px; }
+  .miga a:hover { color: var(--acento); }
+  time { color: var(--acento); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  h1 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); margin-block: 10px 26px; }
+  .portada { width: 100%; border-radius: var(--radio-caja); margin-bottom: 32px; }
+  .prosa :global(p) { margin-bottom: 16px; color: var(--texto-sec); }
+  .prosa :global(h2) { font-size: 1.4rem; margin: 32px 0 12px; }
+  .prosa :global(ul) { margin: 0 0 16px 20px; color: var(--texto-sec); }
+  .cierre { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--borde); text-align: center; }
+  .cierre p { color: var(--texto-sec); margin-bottom: 16px; }
+</style>

@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TarjetaNovedad from '../../components/TarjetaNovedad.astro';
+import { novedadesPublicadas } from '../../lib/novedades';
+
+const novedades = novedadesPublicadas(await getCollection('novedades'));
+---
+<Base titulo="Novedades" descripcion="Noticias, promociones y consejos sobre seguros de JR Seguros.">
+  <section class="contenedor bloque">
+    <p class="etiqueta">Al día</p>
+    <h1>Novedades</h1>
+    <p class="intro">Promociones, cambios en las pólizas y consejos prácticos.</p>
+
+    {novedades.length === 0 ? (
+      <p class="vacio">Todavía no hay novedades publicadas. Vuelve pronto.</p>
+    ) : (
+      <div class="rejilla">
+        {novedades.map((n) => <TarjetaNovedad novedad={n} />)}
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .bloque { padding-block: 56px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin-block: 8px 14px; }
+  .intro { color: var(--texto-sec); margin-bottom: 34px; }
+  .rejilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .vacio { color: var(--texto-sec); border: 1px dashed var(--borde); border-radius: var(--radio-tarjeta); padding: 40px; text-align: center; }
+  @media (max-width: 900px) { .rejilla { grid-template-columns: 1fr; } }
+</style>
