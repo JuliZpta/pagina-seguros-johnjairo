@@ -20,7 +20,7 @@ const portada = resolverImagen(seguro.data.imagen);
 
 const otros = ordenarSeguros(await getCollection('seguros')).filter((s) => s.id !== seguro.id).slice(0, 3);
 ---
-<Base titulo={seguro.data.titulo} descripcion={seguro.data.resumen}>
+<Base titulo={seguro.data.titulo} descripcion={seguro.data.resumen} imagen={portada?.src}>
   <article class="contenedor bloque">
     <nav class="miga" aria-label="Ruta de navegación">
       <a href="/">Inicio</a> <span aria-hidden="true">/</span> <a href="/seguros">Seguros</a>

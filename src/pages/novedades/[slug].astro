@@ -17,7 +17,7 @@ const { Content } = await render(novedad);
 const portada = resolverImagen(novedad.data.imagen);
 const fecha = novedad.data.fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<Base titulo={novedad.data.titulo} descripcion={novedad.data.resumen}>
+<Base titulo={novedad.data.titulo} descripcion={novedad.data.resumen} imagen={portada?.src}>
   <article class="contenedor bloque">
     <nav class="miga" aria-label="Ruta de navegación">
       <a href="/">Inicio</a> <span aria-hidden="true">/</span> <a href="/novedades">Novedades</a>
