@@ -8,7 +8,7 @@ export function normalizarRuta(ruta: string): string {
 }
 
 const mapa = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/img/**/*.{jpg,jpeg,png,webp,avif}',
+  '/src/assets/img/**/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}',
   { eager: true }
 );
 

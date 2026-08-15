@@ -17,4 +17,8 @@ describe('normalizarRuta', () => {
   it('decodifica espacios codificados en el nombre del archivo', () => {
     expect(normalizarRuta('/src/assets/img/mi%20foto.jpg')).toBe('/src/assets/img/mi foto.jpg');
   });
+
+  it('maneja una ruta con extensión en mayúscula, como las de fotos de celular', () => {
+    expect(normalizarRuta('/src/assets/img/IMG_2043.JPG')).toBe('/src/assets/img/IMG_2043.JPG');
+  });
 });
