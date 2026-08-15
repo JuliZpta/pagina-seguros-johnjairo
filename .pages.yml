@@ -1,0 +1,82 @@
+media:
+  input: src/assets/img
+  output: /src/assets/img
+  extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: seguros
+    label: Seguros
+    type: collection
+    path: src/content/seguros
+    view:
+      fields: [titulo, destacado, orden]
+    fields:
+      - { name: titulo, label: Nombre del seguro, type: string, required: true }
+      - { name: icono, label: Emoji, type: string, required: true, description: "Un solo emoji. Ejemplo: 🏠" }
+      - { name: imagen, label: Imagen de portada, type: image }
+      - { name: resumen, label: Resumen corto, type: text, required: true, description: "Dos líneas. Aparece en el menú y en las tarjetas." }
+      - { name: coberturas, label: Qué cubre, type: string, list: true, required: true }
+      - name: preguntas
+        label: Preguntas frecuentes
+        type: object
+        list: true
+        fields:
+          - { name: pregunta, label: Pregunta, type: string, required: true }
+          - { name: respuesta, label: Respuesta, type: text, required: true }
+      - { name: destacado, label: Mostrar en el inicio, type: boolean, default: true }
+      - { name: orden, label: Posición, type: number, required: true, description: "1 aparece primero." }
+      - { name: body, label: Descripción completa, type: rich-text }
+
+  - name: novedades
+    label: Novedades
+    type: collection
+    path: src/content/novedades
+    view:
+      fields: [titulo, fecha, publicado]
+      sort: [fecha]
+    fields:
+      - { name: titulo, label: Título, type: string, required: true }
+      - { name: fecha, label: Fecha, type: date, required: true }
+      - { name: imagen, label: Imagen, type: image }
+      - { name: resumen, label: Resumen, type: text, required: true }
+      - { name: publicado, label: Publicado, type: boolean, default: false, description: "Déjalo apagado mientras la escribes." }
+      - { name: body, label: Contenido, type: rich-text }
+
+  - name: faq
+    label: Preguntas frecuentes
+    type: collection
+    path: src/content/faq
+    view:
+      fields: [pregunta, orden]
+    fields:
+      - { name: pregunta, label: Pregunta, type: string, required: true }
+      - { name: orden, label: Posición, type: number, required: true }
+      - { name: body, label: Respuesta, type: rich-text }
+
+  - name: contacto
+    label: Datos de contacto
+    type: file
+    path: src/content/config/contacto.json
+    fields:
+      - { name: whatsapp, label: WhatsApp, type: string, required: true, pattern: "^[0-9]{10,15}$", description: "Solo números, con indicativo y sin +. Ejemplo: 573001112233" }
+      - { name: correo, label: Correo, type: string, required: true }
+      - { name: ubicacion, label: Ubicación, type: string, required: true }
+      - { name: horario, label: Horario de atención, type: string, required: true }
+
+  - name: inicio
+    label: Textos del inicio
+    type: file
+    path: src/content/config/inicio.json
+    fields:
+      - { name: heroTitulo, label: Titular principal, type: string, required: true }
+      - { name: heroResaltado, label: Palabra en verde, type: string, required: true, description: "Debe ser una palabra que esté dentro del titular." }
+      - { name: heroSubtitulo, label: Subtítulo, type: text, required: true }
+      - { name: heroInsignia, label: Insignia superior, type: string, required: true }
+      - { name: sobreMi, label: Texto de Sobre mí, type: text, required: true }
+      - name: estadisticas
+        label: Estadísticas
+        type: object
+        list: true
+        fields:
+          - { name: numero, label: Número, type: string, required: true }
+          - { name: etiqueta, label: Descripción, type: string, required: true }
