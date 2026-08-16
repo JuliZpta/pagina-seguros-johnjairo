@@ -4,39 +4,51 @@ Notas para Julián sobre cómo se despliega este sitio y qué hay que vigilar.
 
 ## Hosting
 
-Cloudflare Pages, en el plan gratuito. El plan gratuito permite uso comercial sin restricción, así que no hay que pasar a un plan de pago para operar el sitio de John Jairo.
+**Cloudflare Workers** (assets estáticos), en el plan gratuito. Permite uso comercial sin restricción y las peticiones a archivos estáticos no consumen cuota.
+
+No es Cloudflare Pages: el diseño original decía Pages, pero al crear el proyecto Cloudflare ofrece el flujo de Workers. Para un sitio solo-estático es equivalente y es el camino que Cloudflare recomienda hoy.
+
+Ese flujo exige un `wrangler.jsonc` en la raíz del repo. Ya está creado. El campo `name` de ese archivo **debe coincidir** con el "Project name" del panel; si cambias uno, cambia el otro.
 
 ## Rama por defecto
 
-El repositorio remoto usa **`master`** como rama por defecto, no `main`. Al conectar el repo en Cloudflare Pages, la rama de producción que hay que seleccionar es `master`. Si Cloudflare la autodetecta mal (algunos flujos asumen `main` por defecto), corrígela a mano en la configuración del proyecto.
+El repositorio remoto usa **`master`** como rama por defecto, no `main`. Al conectar el repo en Cloudflare, la rama de producción que hay que seleccionar es `master`. Si Cloudflare la autodetecta mal (algunos flujos asumen `main` por defecto), corrígela a mano en la configuración del proyecto.
 
 ## Comando de build
 
-Ahora mismo no hay CI: nada bloquea un despliegue con contenido inválido o con enlaces rotos salvo lo que el propio build de Cloudflare ejecute. Por defecto Cloudflare correría solo `npm run build`, que no corre los 22 tests de Vitest ni la verificación de enlaces (`npm run enlaces`).
+Ahora mismo no hay CI: nada bloquea un despliegue con contenido inválido salvo lo que el propio build de Cloudflare ejecute. Por defecto Cloudflare correría solo `npm run build`, que no corre los 18 tests de Vitest.
 
-Configura el comando de build en Cloudflare Pages como:
+Configura el comando de build en Cloudflare como:
 
 ```
-npm test && npm run build && npm run enlaces
+npm test && npm run build
 ```
 
-Así, si algún test falla o `linkinator` encuentra un enlace roto en el sitio generado, el build falla y el despliegue no se publica — el sitio en producción sigue siendo el último build bueno.
+Así, si algún test falla, el build falla y el despliegue no se publica — el sitio en producción sigue siendo el último build bueno.
+
+**Deploy command:** `npx wrangler deploy` (valor por defecto del panel, no hay que cambiarlo)
 
 **Directorio de salida:** `dist`
 
-## Paso obligatorio antes del primer despliegue a producción
+### Sobre `npm run enlaces`
 
-`astro.config.mjs` tiene:
+La verificación de enlaces (`linkinator`) **no** va en el comando de build. Revisa el HTML generado, donde las URL canónicas apuntan al dominio de producción; hasta que el sitio esté desplegado esas URL no resuelven y la verificación fallaría siempre, bloqueando justamente el primer despliegue. Córrela a mano después de desplegar:
 
-```js
-site: 'https://jrseguros.pages.dev'
+```
+npm run build && npm run enlaces
 ```
 
-Es una suposición del nombre del proyecto. Cloudflare Pages asigna el dominio `<nombre-del-proyecto>.pages.dev` según el nombre que le des al crear el proyecto (o que Cloudflare genere si hay colisión de nombre). Antes de considerar el sitio "en producción":
+## Paso obligatorio antes del primer despliegue a producción
 
-1. Crea o revisa el proyecto en Cloudflare Pages y confirma el subdominio `.pages.dev` real que te asignó.
-2. Si no coincide exactamente con `https://jrseguros.pages.dev`, actualiza `site` en `astro.config.mjs` con el valor correcto.
-3. Vuelve a desplegar.
+**Resuelto.** `astro.config.mjs` ya apunta a la URL real:
+
+```js
+site: 'https://pagina-seguros-johnjairo.jrseguros.workers.dev'
+```
+
+Se compone del nombre del proyecto (`pagina-seguros-johnjairo`) más el subdominio de la cuenta (`jrseguros.workers.dev`, visible en Workers & Pages → Account Details).
+
+Vuelve a revisarlo solo si cambias el nombre del proyecto en Cloudflare — y en ese caso también hay que cambiar `name` en `wrangler.jsonc`.
 
 Si este paso se salta, las URL canónicas (`<link rel="canonical">`), las etiquetas `og:url` / `og:image` y el `sitemap-index.xml` seguirán apuntando a un dominio que no es el real. No se nota a simple vista porque las páginas se ven y funcionan bien igual — el problema solo aparece cuando alguien comparte un enlace, cuando Google indexa el sitemap, o cuando se audita el SEO.
 
@@ -55,13 +67,13 @@ Antes de anunciar el sitio como listo:
 
 ## Dominio propio
 
-Un dominio propio (por ejemplo `jrseguros.com`) se conecta en Cloudflare Pages sin costo adicional de Cloudflare — la única plata que se paga es el dominio en sí. Comprado en Cloudflare Registrar, un `.com` sale a precio de costo, alrededor de US$10,44/año.
+Un dominio propio (por ejemplo `jrseguros.com`) se conecta en Cloudflare sin costo adicional de Cloudflare — la única plata que se paga es el dominio en sí. Comprado en Cloudflare Registrar, un `.com` sale a precio de costo, alrededor de US$10,44/año.
 
 Al conectar el dominio propio:
 
 1. Regístralo o transfiérelo a Cloudflare Registrar (o solo apunta los DNS si ya está en otro proveedor).
-2. Conéctalo como dominio personalizado del proyecto en Cloudflare Pages.
-3. **Actualiza `site` en `astro.config.mjs` otra vez**, esta vez al dominio propio (ej. `https://jrseguros.com`), y vuelve a desplegar. Es el mismo paso que con el `.pages.yml` inicial — hay que hacerlo cada vez que cambia el dominio "oficial" del sitio.
+2. Conéctalo como dominio personalizado del proyecto en Cloudflare.
+3. **Actualiza `site` en `astro.config.mjs` otra vez**, esta vez al dominio propio (ej. `https://jrseguros.com`), y vuelve a desplegar. Hay que hacerlo cada vez que cambia el dominio "oficial" del sitio.
 
 ## Si un despliegue falla
 
@@ -69,8 +81,6 @@ Con el comando de build recomendado arriba, casi siempre la causa es contenido i
 
 El sitio en vivo **no cambia** hasta que el build completo pase — un despliegue fallido no reemplaza el último bueno. Para diagnosticar:
 
-1. Abre el log del build fallido en Cloudflare Pages.
-2. Busca el error de validación de zod (viene de los esquemas en `src/content/config.ts`): indica el archivo de contenido exacto y el campo que no cumple el esquema.
+1. Abre el log del build fallido en Cloudflare.
+2. Busca el error de validación de zod (viene de los esquemas en `src/content.config.ts`): indica el archivo de contenido exacto y el campo que no cumple el esquema.
 3. Corrige ese campo desde el panel o directamente en el archivo, y vuelve a desplegar.
-
-Si el fallo viene de `npm run enlaces`, el log de `linkinator` señala la URL de origen y el enlace roto.
