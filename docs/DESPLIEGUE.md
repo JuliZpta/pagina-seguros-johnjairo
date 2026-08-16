@@ -43,10 +43,10 @@ npm run build && npm run enlaces
 **Resuelto.** `astro.config.mjs` ya apunta a la URL real:
 
 ```js
-site: 'https://pagina-seguros-johnjairo.jrseguros.workers.dev'
+site: 'https://web.jrseguros.workers.dev'
 ```
 
-Se compone del nombre del proyecto (`pagina-seguros-johnjairo`) más el subdominio de la cuenta (`jrseguros.workers.dev`, visible en Workers & Pages → Account Details).
+Se compone del nombre del proyecto (`web`) más el subdominio de la cuenta (`jrseguros.workers.dev`, visible en Workers & Pages → Account Details).
 
 Vuelve a revisarlo solo si cambias el nombre del proyecto en Cloudflare — y en ese caso también hay que cambiar `name` en `wrangler.jsonc`.
 

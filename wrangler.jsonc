@@ -1,7 +1,7 @@
 {
   // Configuración de despliegue en Cloudflare Workers (assets estáticos).
   // El nombre debe coincidir con el "Project name" del panel de Cloudflare.
-  "name": "pagina-seguros-johnjairo",
+  "name": "web",
   "compatibility_date": "2026-08-16",
 
   // Sitio 100% estático: solo se sirven los archivos que genera `npm run build`.
