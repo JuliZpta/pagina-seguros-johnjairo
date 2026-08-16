@@ -7,6 +7,10 @@
   // Sitio 100% estático: solo se sirven los archivos que genera `npm run build`.
   // No hay `main` porque no existe código de servidor.
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+
+    // Sin esto, una URL inexistente devuelve una página en blanco.
+    // Con esto, sirve nuestro 404.astro (en español, con enlaces de vuelta).
+    "not_found_handling": "404-page"
   }
 }
